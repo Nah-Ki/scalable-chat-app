@@ -1,4 +1,6 @@
-import { AuthOptions, ISODateString } from "next-auth";
+import { LOGIN_URL } from "@/lib/api-end-poitns";
+import axios from "axios";
+import { Account, AuthOptions, ISODateString } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -21,10 +23,25 @@ export const authOptions: AuthOptions = {
     signIn: "/",
   },
   callbacks: {
-    async signIn({ user, account}) {
-      console.log("The user data is", user);
-      console.log("The account is", account);
-      return true
+    async signIn({ user, account }: { user: CustomUser; account: Account | null }) {
+      try {
+        console.log("The user data is", user);
+        console.log("The account is", account);
+        const payload = {
+          email: user.email,
+          name: user.name,
+          oauth_id: account?.providerAccountId,
+          provider: account?.provider,
+          image: user?.image,
+        };
+        const { data } = await axios.post(LOGIN_URL, payload);
+        user.id = data?.user?.id?.toString();
+        user.token = data?.user?.token;
+        user.provider = data?.user?.provider;
+        return true;
+      } catch (error) {
+        return false;
+      }
     },
     async session({ session, user, token }: { session: CustomSession; user: CustomUser; token: JWT }) {
       session.user = token.user as CustomUser;
@@ -41,7 +58,7 @@ export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           prompt: "consent",
