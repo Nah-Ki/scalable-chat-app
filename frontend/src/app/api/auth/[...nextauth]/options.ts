@@ -34,13 +34,15 @@ export const authOptions: AuthOptions = {
           provider: account?.provider,
           image: user?.image,
         };
+        console.log(payload);
         const { data } = await axios.post(LOGIN_URL, payload);
         user.id = data?.user?.id?.toString();
         user.token = data?.user?.token;
+        console.log("this isthe login being setnt", user.token);
         user.provider = data?.user?.provider;
         return true;
       } catch (error) {
-        return false;
+        return false
       }
     },
     async session({ session, user, token }: { session: CustomSession; user: CustomUser; token: JWT }) {
@@ -51,6 +53,7 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.user = user;
       }
+      console.log("this is the token", token);
       return token;
     },
   },
