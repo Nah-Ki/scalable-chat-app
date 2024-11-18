@@ -1,5 +1,5 @@
 "use client";
-import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -28,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <Toaster richColors duration={1000} />
+          {children}
+        </body>
       </SessionProvider>
     </html>
   );

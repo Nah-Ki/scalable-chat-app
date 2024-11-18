@@ -40,7 +40,7 @@ export const authOptions: AuthOptions = {
         user.provider = data?.user?.provider;
         return true;
       } catch (error) {
-        return false;
+        return user;
       }
     },
     async session({ session, user, token }: { session: CustomSession; user: CustomUser; token: JWT }) {
@@ -58,7 +58,7 @@ export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           prompt: "consent",
