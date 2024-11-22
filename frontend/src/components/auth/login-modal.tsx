@@ -1,7 +1,6 @@
 "use client";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { Button } from "../ui/button";
