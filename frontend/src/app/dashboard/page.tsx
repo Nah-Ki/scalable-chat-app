@@ -1,5 +1,12 @@
-"use client";
+import DashNav from "@/components/dashboard/dash-nav";
+import { getServerSession } from "next-auth";
+import { authOptions, CustomSession } from "../api/auth/[...nextauth]/options";
 
-export default function Dashboard() {
-  return <h1>hwlow</h1>;
+export default async function dashboard() {
+  const session: CustomSession | null = await getServerSession(authOptions);
+  return (
+    <div>
+      <DashNav name={session?.user?.name!} image={session?.user?.image ?? undefined} />
+    </div>
+  );
 }
